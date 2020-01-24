@@ -1,0 +1,11 @@
+app:
+  port: 3000
+  hostname: localhost
+db:
+  host: localhost
+  port: 3306
+  database: logistic_app
+  user: root
+  password:
+  # options: "all" | ["query" | "schema" | "error" | "warn" | "info" | "log" | "migration"]
+  logging: all

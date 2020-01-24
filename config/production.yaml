@@ -1,0 +1,7 @@
+app:
+  hostname: 0.0.0.0
+db:
+  user: taller_angular_user
+  password: taller_angular_2019
+  # options: "all" | ["query" | "schema" | "error" | "warn" | "info" | "log" | "migration"]
+  logging: error
