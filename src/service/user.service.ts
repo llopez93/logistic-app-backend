@@ -2,7 +2,12 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {DeleteResult} from 'typeorm';
 import {User} from "../model/user.entity";
-import {UserRepository} from "../repository/user.repository";
+import {UserRepository} from "../user/repository/user.repository";
+import * as bcrypt from 'bcrypt';
+import {UserDTO} from "../dto/user.dto";
+
+const saltRounds = 12;
+const basePassword = "changeme";
 
 @Injectable()
 export class UserService {
@@ -18,16 +23,27 @@ export class UserService {
         return this.repository.find({relations: ["role"]});
     }
 
-    create(User: User): Promise<User> {
-        return this.repository.save(User);
+    async create(user: User): Promise<UserDTO> {
+        //TODO: Atrapar la excepción cuando un usuario ya existe.
+        user.password = await bcrypt.hash(basePassword, saltRounds);
+        return this.repository.save(user)
+            .then(value => {
+                let u = new UserDTO(null);
+                u.mapEntity(value);
+                return u;
+            });
     }
 
-    update(User: User): Promise<User> {
-        return this.repository.save(User);
+    update(user: User): Promise<User> {
+        return this.repository.save(user);
     }
 
     remove(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
+    }
+
+    async findByUsername(email: string): Promise<User> {
+        return this.repository.findOne({email: email});
     }
 
 }
