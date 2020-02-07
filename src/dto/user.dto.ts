@@ -1,5 +1,6 @@
 import {AbstractDTO} from "./abstract.dto";
 import {User} from "../model/user.entity";
+import {Role} from "../model/role.entity";
 
 export class UserDTO extends AbstractDTO {
 
@@ -7,8 +8,8 @@ export class UserDTO extends AbstractDTO {
     lastName: string;
     email: string;
     enabled: boolean = true;
+    role: Role;
 
-    //role: Role;
     constructor(o: Partial<UserDTO>) {
         super();
         Object.assign(this, o);
@@ -20,5 +21,6 @@ export class UserDTO extends AbstractDTO {
         this.lastName = o.lastName;
         this.email = o.email;
         this.enabled = o.enabled;
+        this.role = o.role;
     }
 }
