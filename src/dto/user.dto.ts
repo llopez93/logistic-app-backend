@@ -1,6 +1,6 @@
 import {AbstractDTO} from "./abstract.dto";
 import {User} from "../model/user.entity";
-import {Role} from "../model/role.entity";
+import {RoleDto} from "./role.dto";
 
 export class UserDTO extends AbstractDTO {
 
@@ -8,11 +8,13 @@ export class UserDTO extends AbstractDTO {
     lastName: string;
     email: string;
     enabled: boolean = true;
-    role: Role;
+    role: RoleDto;
 
     constructor(o: Partial<UserDTO>) {
         super();
         Object.assign(this, o);
+        if (this.role)
+            this.role = new RoleDto(this.role);
     }
 
     mapEntity(o: User) {
@@ -21,6 +23,8 @@ export class UserDTO extends AbstractDTO {
         this.lastName = o.lastName;
         this.email = o.email;
         this.enabled = o.enabled;
-        this.role = o.role;
+        if (o.role) {
+            this.role = new RoleDto(o.role);
+        }
     }
 }
