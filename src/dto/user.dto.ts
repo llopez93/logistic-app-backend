@@ -1,8 +1,8 @@
-import {AbstractDTO} from "./abstract.dto";
 import {User} from "../model/user.entity";
 import {RoleDto} from "./role.dto";
+import {AbstractDto} from "../core/domain/abstract.dto";
 
-export class UserDTO extends AbstractDTO {
+export class UserDTO extends AbstractDto {
 
     firstName: string;
     lastName: string;
@@ -10,21 +10,15 @@ export class UserDTO extends AbstractDTO {
     enabled: boolean = true;
     role: RoleDto;
 
-    constructor(o: Partial<UserDTO>) {
+    constructor(o: Partial<UserDTO> | User | Partial<User>) {
         super();
         Object.assign(this, o);
         if (this.role)
             this.role = new RoleDto(this.role);
     }
 
-    mapEntity(o: User) {
-        super.mapEntity(o);
-        this.firstName = o.firstName;
-        this.lastName = o.lastName;
-        this.email = o.email;
-        this.enabled = o.enabled;
-        if (o.role) {
-            this.role = new RoleDto(o.role);
-        }
+    mapToEntity(): User {
+        return new User(this);
     }
+
 }

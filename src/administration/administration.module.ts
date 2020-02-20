@@ -5,15 +5,17 @@ import {TypeORMConfig} from "../../config/typeorm.config";
 import {RoleRepository} from "../repository/role.repository";
 import {UserRepository} from "./repository/user.repository";
 import {UserController} from "./controller/user.controller";
+import {RoleService} from "./service/role.service";
+import {RoleController} from "./controller/role.controller";
 
 @Module({
     imports: [
         TypeOrmModule.forRoot(TypeORMConfig),
         TypeOrmModule.forFeature([UserRepository, RoleRepository])
     ],
-    providers: [UserService],
+    providers: [UserService, RoleService],
     exports: [UserService],
-    controllers: [UserController]
+    controllers: [UserController, RoleController]
 })
-export class UserModule {
+export class AdministrationModule {
 }

@@ -1,7 +1,7 @@
-import {AbstractDTO} from "./abstract.dto";
 import {Role} from "../model/role.entity";
+import {AbstractDto} from "../core/domain/abstract.dto";
 
-export class RoleDto extends AbstractDTO {
+export class RoleDto extends AbstractDto {
 
     name: string;
 
@@ -10,8 +10,7 @@ export class RoleDto extends AbstractDTO {
         Object.assign(this, o);
     }
 
-    mapEntity(e: Role) {
-        super.mapEntity(e);
-        this.name = e.name;
+    mapToEntity(): Role {
+        return new Role(this);
     }
 }
