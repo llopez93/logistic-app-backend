@@ -1,6 +1,6 @@
 import {AbstractDto} from "./abstract.dto";
 
-export class Pageable<T extends AbstractDto> {
+export class PaginatedPage<T> {
 
     data: T[] = [];
     page: number = 0;

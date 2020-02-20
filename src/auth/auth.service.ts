@@ -13,7 +13,7 @@ export class AuthService {
     }
 
     async validateUser(username: string, pass: string): Promise<any> {
-        const user = await this.usersService.findByUsername(username);
+        const user = await this.usersService.findByUsernameAndEnabled(username);
         if (user && await bcrypt.compare(pass, user.password)) {
             let payload = {name: user.firstName + " " + user.lastName, email: user.email};
             return {token: jwtConstants.tokenBearer + this.jwtService.sign(payload)};
