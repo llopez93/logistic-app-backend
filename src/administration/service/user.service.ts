@@ -4,12 +4,12 @@ import {User} from "../../model/user.entity";
 import {UserRepository} from "../repository/user.repository";
 import * as bcrypt from 'bcrypt';
 import {UserDTO} from "../../dto/user.dto";
-import {CrudRequest} from "@nestjsx/crud";
-import {DeepPartial, SelectQueryBuilder} from "typeorm";
+import {SelectQueryBuilder, UpdateResult} from "typeorm";
 import {GenericCrudService} from "../../core/generic-crud-service";
 import {PageableService} from "../../core/pageable-service";
 import {Pageable} from "../../core/domain/pageable";
 import {PaginatedPage} from "../../core/domain/paginatedPage";
+import {userInfo} from "os";
 
 const saltRounds = 12;
 const basePassword = "changeme";
@@ -21,6 +21,11 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
         super(r);
     }
 
+
+    async findOne(id: number): Promise<UserDTO> {
+        return this.repository.findOne( {id : id}, {relations : ["role"]}).then(user => this.mapToDTO(user));
+    }
+
     async create(entity: UserDTO): Promise<UserDTO> {
         const user = this.mapToEntity(entity);
         user.password = await bcrypt.hash(basePassword, saltRounds);
@@ -30,46 +35,14 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
             );
     }
 
-    /*
-        async create(entity:UserDTO: User): Promise<UserDTO> {
-            //TODO: Atrapar la excepción cuando un usuario ya existe.
-            user.password = await bcrypt.hash(basePassword, saltRounds);
-            return this.repository.save(user)
-                .then(value => {
-                    let u = new UserDTO(null);
-                    //u.mapEntity(value);
-                    return u;
-                });
-        }
-
-     */
-
     public findByUsernameFullJoined(email: string): Promise<UserDTO> {
         return this.repository.findOne({email: email}, {relations: ["role"]})
             .then(user => this.mapToDTO(user));
     }
 
-    public findByUsername(email: string): Promise<User> {
-        return this.repository.findOne({email: email});
-    }
-
     public findByUsernameAndEnabled(email: string): Promise<User> {
-        return this.repository.findOne({email: email, enabled : true});
+        return this.repository.findOne({email: email, enabled: true});
     }
-
-
-    async createOne(req: CrudRequest, dto: DeepPartial<User>): Promise<User> {
-        dto.password = await bcrypt.hash(basePassword, saltRounds);
-        return null;//super.createOne(req, dto);
-    }
-
-    /**
-     async update(user: UserDTO) {
-        const u = await this.repository.findOne(user.id, {relations: ["role"]});
-        Object.assign(u, user);
-        return this.repository.update({id: u.id}, u);
-    }
-     */
 
     mapToDTO(entity: User): UserDTO {
         const {password, ...dto} = entity;
@@ -78,6 +51,12 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
 
     mapToEntity(dto: UserDTO): User {
         return new UserDTO(dto).mapToEntity();
+    }
+
+    async resetPassword(dto: UserDTO): Promise<UpdateResult> {
+        const user = this.mapToEntity(dto);
+        user.password = await bcrypt.hash(basePassword, saltRounds);
+        return this.repository.update(user.id, user);
     }
 
     getPage(pageable: Pageable): Promise<PaginatedPage<UserDTO>> {
