@@ -18,7 +18,6 @@ export class Pageable {
             })
         }
 
-
     }
 
     public hasFilters(): boolean {

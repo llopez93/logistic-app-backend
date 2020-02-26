@@ -9,7 +9,6 @@ import {GenericCrudService} from "../../core/generic-crud-service";
 import {PageableService} from "../../core/pageable-service";
 import {Pageable} from "../../core/domain/pageable";
 import {PaginatedPage} from "../../core/domain/paginatedPage";
-import {userInfo} from "os";
 
 const saltRounds = 12;
 const basePassword = "changeme";

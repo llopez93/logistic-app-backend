@@ -1,0 +1,28 @@
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Brand} from "../../model/brand.entity";
+import {Model} from "../../model/model.entity";
+import {ModelRepository} from "../repository/model.repository";
+
+@Injectable()
+export class ModelService {
+
+    constructor(@InjectRepository(Model) private readonly repository: ModelRepository) {
+    }
+
+    public findAll(): Promise<Brand[]> {
+        return this.repository.find({relations: ["brand"]});
+    }
+
+    public findByBrand(brandId: number): Promise<Model[]> {
+        return this.repository.find({
+            relations: ["brand"],
+            where: [
+                {
+                    brand: {id: brandId}
+                }
+            ]
+        });
+    }
+
+}

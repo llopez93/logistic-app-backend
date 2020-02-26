@@ -6,6 +6,7 @@ import {PersonService} from './service/person.service';
 import {PersonController} from './controller/person.controller';
 import {AuthModule} from './auth/auth.module';
 import {AdministrationModule} from './administration/administration.module';
+import { TruckModule } from './truck/truck.module';
 
 @Module({
     imports: [
@@ -13,6 +14,7 @@ import {AdministrationModule} from './administration/administration.module';
         TypeOrmModule.forFeature([PersonRepository]),
         AuthModule,
         AdministrationModule,
+        TruckModule,
 
     ],
     controllers: [PersonController],
