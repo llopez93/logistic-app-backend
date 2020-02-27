@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Put, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {UserService} from "../service/user.service";
 import {User} from "../../model/user.entity";
@@ -32,6 +32,14 @@ export class UserController extends GenericController<User, UserDTO> {
     @ApiBearerAuth()
     resetPassword(@Body() u: UserDTO): Promise<any> {
         return this.userService.resetPassword(u);
+    }
+
+    @Post('change-password')
+    @ApiOperation({title: "Modifica la contraseña del usuario que esta logeado"})
+    @ApiBearerAuth()
+    changePasswotd(@Req() request: Request, @Body() passwords: { actualPassword: string, newPassword: string }): Promise<any> {
+        let sessionInfo: any = request.user;
+        return this.userService.changePassword(passwords.actualPassword, passwords.newPassword, sessionInfo.email);
     }
 
 

@@ -8,6 +8,7 @@ export class UserDTO extends AbstractDto {
     lastName: string;
     email: string;
     enabled: boolean = true;
+    firstLogin: boolean = false;
     role: RoleDto;
 
     constructor(o: Partial<UserDTO> | User | Partial<User>) {
@@ -18,7 +19,8 @@ export class UserDTO extends AbstractDto {
     }
 
     mapToEntity(): User {
-        return new User(this);
+        const {firstLogin, ...e} = this;
+        return new User(e);
     }
 
 }

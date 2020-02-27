@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {User} from "../../model/user.entity";
 import {UserRepository} from "../repository/user.repository";
@@ -20,9 +20,8 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
         super(r);
     }
 
-
     async findOne(id: number): Promise<UserDTO> {
-        return this.repository.findOne( {id : id}, {relations : ["role"]}).then(user => this.mapToDTO(user));
+        return this.repository.findOne({id: id}, {relations: ["role"]}).then(user => this.mapToDTO(user));
     }
 
     async create(entity: UserDTO): Promise<UserDTO> {
@@ -34,9 +33,13 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
             );
     }
 
-    public findByUsernameFullJoined(email: string): Promise<UserDTO> {
+    async findByUsernameFullJoined(email: string): Promise<UserDTO> {
         return this.repository.findOne({email: email}, {relations: ["role"]})
-            .then(user => this.mapToDTO(user));
+            .then(async user => {
+                const dto = this.mapToDTO(user);
+                dto.firstLogin = await bcrypt.compare(basePassword, user.password)
+                return dto;
+            });
     }
 
     public findByUsernameAndEnabled(email: string): Promise<User> {
@@ -85,5 +88,17 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
         });
     }
 
+    async changePassword(actualPassword, newPassword, email: string): Promise<UpdateResult> {
+        newPassword.trim();
+        if (newPassword && newPassword != '' && newPassword.length >= 6) {
+            const user = await this.repository.findOne({email: email, enabled: true});
+            const defaultPass = await bcrypt.compare(basePassword, user.password);
+            if (defaultPass || await bcrypt.compare(actualPassword, user.password)) {
+                user.password = await bcrypt.hash(newPassword, saltRounds);
+                return this.repository.update(user.id, user);
+            }
+        }
+        throw new HttpException("Las contraseñas no coinciden", HttpStatus.CONFLICT);
+    }
 
 }
