@@ -128,6 +128,16 @@ CREATE TABLE `client` (
   `id` bigint(20) NOT NULL,
   `name` varchar(300) NOT NULL,
   `phone` varchar(50) NOT NULL,
+  `phone_type` varchar(30) NOT NULL,
   `email` varchar(150) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-COMMIT;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `client`
+--
+ALTER TABLE `client`
+  ADD PRIMARY KEY (`id`);
