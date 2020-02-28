@@ -1,6 +1,7 @@
 import {AbstractDto} from "../../core/domain/abstract.dto";
 import {Truck} from "../../model/truck/truck.entity";
 import {ModelDTO} from "./model.dto";
+import { TruckService } from "src/truck/service/truck.service";
 
 export class TruckDTO extends AbstractDto {
 
@@ -12,10 +13,12 @@ export class TruckDTO extends AbstractDto {
     constructor(o: Partial<TruckDTO> | Truck | Partial<Truck>) {
         super();
         Object.assign(this, o);
+        if (this.model)
+            this.model = new ModelDTO(this.model);
     }
 
     mapToEntity(): Truck {
-        return null;
+        return new Truck(this);
     }
 
 }
