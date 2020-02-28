@@ -1,6 +1,6 @@
 import {AbstractDto} from "../core/domain/abstract.dto";
 import {Client} from "../model/client.entity";
-import {PhoneType} from "../model/phone-type";
+import {findTypeByValue, PhoneType} from "../model/phone-type";
 
 export class ClientDTO extends AbstractDto {
 
@@ -17,7 +17,7 @@ export class ClientDTO extends AbstractDto {
     mapToEntity(): Client {
         const {phoneType, ...dto} = this;
         const c = new Client(dto);
-        c.phoneType = PhoneType[this.phoneType];
+        c.phoneType = findTypeByValue(this.phoneType);
         return c;
     }
 

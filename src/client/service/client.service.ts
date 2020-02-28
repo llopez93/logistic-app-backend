@@ -51,7 +51,7 @@ export class ClientService extends GenericCrudService<Client, ClientDTO> impleme
     }
 
     mapToEntity(dto: ClientDTO): Client {
-        return dto.mapToEntity();
+        return new ClientDTO(dto).mapToEntity();
     }
 
 
