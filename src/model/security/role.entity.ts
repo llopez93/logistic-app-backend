@@ -1,7 +1,7 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
-import {AbstractEntity} from "./abstract.entity";
+import {AbstractEntity} from "../commons/abstract.entity";
 
 @Entity('role')
 export class Role extends AbstractEntity {

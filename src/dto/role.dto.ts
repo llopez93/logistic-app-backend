@@ -1,4 +1,4 @@
-import {Role} from "../model/role.entity";
+import {Role} from "../model/security/role.entity";
 import {AbstractDto} from "../core/domain/abstract.dto";
 
 export class RoleDto extends AbstractDto {

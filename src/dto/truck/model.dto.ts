@@ -1,6 +1,6 @@
 import {AbstractDto} from "../../core/domain/abstract.dto";
-import {Brand} from "../../model/brand.entity";
-import {Model} from "../../model/model.entity";
+import {Brand} from "../../model/truck/brand.entity";
+import {Model} from "../../model/truck/model.entity";
 import {BrandDTO} from "./brand.dto";
 
 export class ModelDTO extends AbstractDto {

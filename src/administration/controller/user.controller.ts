@@ -1,7 +1,7 @@
 import {Body, Controller, Get, Post, Put, Req, UseGuards} from '@nestjs/common';
 import {ApiBearerAuth, ApiOperation, ApiUseTags} from '@nestjs/swagger';
 import {UserService} from "../service/user.service";
-import {User} from "../../model/user.entity";
+import {User} from "../../model/security/user.entity";
 import {UserDTO} from "../../dto/user.dto";
 import {AuthGuard} from "@nestjs/passport";
 import {Request} from 'express';

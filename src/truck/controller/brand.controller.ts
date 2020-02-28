@@ -2,7 +2,7 @@ import {Controller, Get, UseGuards} from '@nestjs/common';
 import {AuthGuard} from "@nestjs/passport";
 import {ApiOperation, ApiUseTags} from "@nestjs/swagger";
 import {BrandService} from "../service/brand.service";
-import {Brand} from "../../model/brand.entity";
+import {Brand} from "../../model/truck/brand.entity";
 
 
 @UseGuards(AuthGuard('jwt'))

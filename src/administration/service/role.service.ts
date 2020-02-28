@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {GenericCrudService} from "../../core/generic-crud-service";
 import {RoleDto} from "../../dto/role.dto";
-import {Role} from "../../model/role.entity";
+import {Role} from "../../model/security/role.entity";
 import {RoleRepository} from "../repository/role.repository";
 import {PageableService} from "../../core/pageable-service";
 import {Pageable} from "../../core/domain/pageable";

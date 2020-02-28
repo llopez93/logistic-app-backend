@@ -1,4 +1,4 @@
-import {User} from "../model/user.entity";
+import {User} from "../model/security/user.entity";
 import {RoleDto} from "./role.dto";
 import {AbstractDto} from "../core/domain/abstract.dto";
 

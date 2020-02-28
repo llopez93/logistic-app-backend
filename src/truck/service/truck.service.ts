@@ -1,15 +1,13 @@
 import {Injectable} from '@nestjs/common';
 import {GenericCrudService} from "../../core/generic-crud-service";
 import {PageableService} from "../../core/pageable-service";
-import {Truck} from "../../model/truck.entity";
+import {Truck} from "../../model/truck/truck.entity";
 import {TruckDTO} from "../../dto/truck/truck.dto";
 import {InjectRepository} from "@nestjs/typeorm";
 import {TruckRepository} from "../repository/truck.repository";
 import {Pageable} from "../../core/domain/pageable";
 import {PaginatedPage} from "../../core/domain/paginatedPage";
-import {UserDTO} from "../../dto/user.dto";
 import {SelectQueryBuilder} from "typeorm";
-import {User} from "../../model/user.entity";
 
 @Injectable()
 export class TruckService extends GenericCrudService<Truck, TruckDTO> implements PageableService<TruckDTO> {

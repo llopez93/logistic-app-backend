@@ -1,5 +1,5 @@
 import {AbstractDto} from "../../core/domain/abstract.dto";
-import {Truck} from "../../model/truck.entity";
+import {Truck} from "../../model/truck/truck.entity";
 import {ModelDTO} from "./model.dto";
 
 export class TruckDTO extends AbstractDto {

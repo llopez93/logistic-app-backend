@@ -1,4 +1,4 @@
-import {AbstractEntity} from "../../model/abstract.entity";
+import {AbstractEntity} from "../../model/commons/abstract.entity";
 
 export abstract class AbstractDto {
     id: number;

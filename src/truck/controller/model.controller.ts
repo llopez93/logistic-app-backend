@@ -1,6 +1,6 @@
 import {Controller, Get, Param, UseGuards} from '@nestjs/common';
 import {ApiOperation, ApiUseTags} from "@nestjs/swagger";
-import {Brand} from "../../model/brand.entity";
+import {Brand} from "../../model/truck/brand.entity";
 import {AuthGuard} from "@nestjs/passport";
 import {ModelService} from "../service/model.service";
 

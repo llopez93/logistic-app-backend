@@ -21,8 +21,13 @@ export class Person {
 
     @IsNotEmpty()
     @ApiModelProperty()
-    @Column({name: 'age'})
-    age: number;
+    @Column({name: 'email'})
+    email: string;
+
+    @ApiModelProperty()
+    @Column({name: 'cuil'})
+    cuil: string = "";
+
 
     constructor(o: Partial<Person>) {
        Object.assign(this, o);

@@ -1,7 +1,7 @@
 import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
-import {AbstractEntity} from "./abstract.entity";
+import {AbstractEntity} from "../commons/abstract.entity";
 import {Exclude, Expose} from "class-transformer";
 import {Role} from "./role.entity";
 
