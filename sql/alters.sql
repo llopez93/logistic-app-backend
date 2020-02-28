@@ -121,3 +121,13 @@ ALTER TABLE `model`
 ALTER TABLE `truck`
   ADD CONSTRAINT `model_truck_fk` FOREIGN KEY (`model_id`) REFERENCES `model` (`id`);
 COMMIT;
+
+ALTER TABLE `person` ADD `email` VARCHAR(150) NULL AFTER `last_name`, ADD `cuil` VARCHAR(50) NULL AFTER `email`;
+
+CREATE TABLE `client` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `email` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+COMMIT;
