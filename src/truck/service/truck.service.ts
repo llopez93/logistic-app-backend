@@ -16,6 +16,18 @@ export class TruckService extends GenericCrudService<Truck, TruckDTO> implements
         super(r);
     }
 
+    async findOne(id: number): Promise<TruckDTO> {
+        return this.repository.findOne({id: id}, {relations: ["model"]}).then(truck => this.mapToDTO(truck));
+    }
+
+    mapToDTO(entity: Truck): TruckDTO {
+        return new TruckDTO(entity);
+    }
+
+    mapToEntity(dto: TruckDTO): Truck {
+        return new TruckDTO(dto).mapToEntity();
+    }
+
     getPage(pageable: Pageable): Promise<PaginatedPage<TruckDTO>> {
         const page: PaginatedPage<TruckDTO> = new PaginatedPage<TruckDTO>();
         const query: SelectQueryBuilder<Truck> = this.repository.createQueryBuilder("truck");
@@ -24,18 +36,11 @@ export class TruckService extends GenericCrudService<Truck, TruckDTO> implements
         query.innerJoinAndSelect("model.brand", "brand");
 
         if (pageable.hasFilters()) {
-            /*
-            if (pageable.filters.get("firstName"))
-                query.where("user.firstName like :firstName", {firstName: "%" + pageable.filters.get("firstName") + "%"})
+            if (pageable.filters.get("name"))
+                query.where("truck.name like :name", {name: "%" + pageable.filters.get("name") + "%"})
 
-            if (pageable.filters.get("lastName"))
-                query.andWhere("user.lastName like :lastName", {lastName: "%" + pageable.filters.get("lastName") + "%"})
-
-            if (pageable.filters.get("email"))
-                query.andWhere("user.email like :email", {email: "%" + pageable.filters.get("email") + "%"})
-
-             */
-            console.log("Setear los filtros...");
+            if (pageable.filters.get("domain"))
+                query.andWhere("truck.domain like :domain", {domain: "%" + pageable.filters.get("domain") + "%"})
         }
         query.skip(pageable.page * pageable.size);
         query.take(pageable.size);
@@ -48,13 +53,4 @@ export class TruckService extends GenericCrudService<Truck, TruckDTO> implements
             return page;
         });
     }
-
-    mapToDTO(entity: Truck): TruckDTO {
-        return new TruckDTO(entity);
-    }
-
-    mapToEntity(dto: TruckDTO): Truck {
-        return dto.mapToEntity();
-    }
-
 }
