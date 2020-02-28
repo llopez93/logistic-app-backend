@@ -6,8 +6,8 @@ import {Brand} from "../../model/truck/brand.entity";
 
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('brand')
-@ApiUseTags('brand')
+@Controller('brands')
+@ApiUseTags('brands')
 export class BrandController {
 
 

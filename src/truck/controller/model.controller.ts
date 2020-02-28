@@ -5,8 +5,8 @@ import {AuthGuard} from "@nestjs/passport";
 import {ModelService} from "../service/model.service";
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('model')
-@ApiUseTags('model')
+@Controller('models')
+@ApiUseTags('models')
 export class ModelController {
 
     constructor(private readonly service: ModelService) {

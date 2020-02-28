@@ -7,8 +7,8 @@ import {TruckDTO} from "../../dto/truck/truck.dto";
 import {TruckService} from "../service/truck.service";
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('truck')
-@ApiUseTags('truck')
+@Controller('trucks')
+@ApiUseTags('trucks')
 export class TruckController extends GenericController<Truck, TruckDTO> {
 
     constructor(service: TruckService) {
