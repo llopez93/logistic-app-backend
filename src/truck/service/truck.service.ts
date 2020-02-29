@@ -17,7 +17,7 @@ export class TruckService extends GenericCrudService<Truck, TruckDTO> implements
     }
 
     async findOne(id: number): Promise<TruckDTO> {
-        return this.repository.findOne({id: id}, {relations: ["model"]}).then(truck => this.mapToDTO(truck));
+        return this.repository.findOne({id: id}, {relations: ["model", "model.brand"]}).then(truck => this.mapToDTO(truck));
     }
 
     mapToDTO(entity: Truck): TruckDTO {

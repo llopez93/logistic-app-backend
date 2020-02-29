@@ -17,8 +17,11 @@ export class ModelService {
     public findByBrand(brandId: number): Promise<Model[]> {
         return this.repository.find({
             relations: ["brand"],
-            where: { id: brandId },
-        });
+            where: {
+                brand: {
+                    id: brandId
+                }
+            }});
     }
 
 }
