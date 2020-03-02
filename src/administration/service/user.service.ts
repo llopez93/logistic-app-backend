@@ -25,12 +25,20 @@ export class UserService extends GenericCrudService<User, UserDTO> implements Pa
     }
 
     async create(entity: UserDTO): Promise<UserDTO> {
-        const user = this.mapToEntity(entity);
+        let user: User;
+        user = this.mapToEntity(entity);
         user.password = await bcrypt.hash(basePassword, saltRounds);
+
         return this.repository.save(user)
             .then(value =>
                 this.mapToDTO(value)
-            );
+            )
+            .catch(e => {
+                throw new HttpException("El correo electrónico asignado " +
+                    "ya pertenece a un usuario del sistema", HttpStatus.CONFLICT);
+            });
+
+
     }
 
     async findByUsernameFullJoined(email: string): Promise<UserDTO> {
