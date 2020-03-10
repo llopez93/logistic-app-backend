@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { GenericCrudService } from '../../core/generic-crud-service';
 import { PageableService } from '../../core/pageable-service';
 import { Truck } from '../../model/truck/truck.entity';
@@ -8,12 +8,41 @@ import { TruckRepository } from '../repository/truck.repository';
 import { Pageable } from '../../core/domain/pageable';
 import { PaginatedPage } from '../../core/domain/paginatedPage';
 import { SelectQueryBuilder } from 'typeorm';
+import { OwnerService } from './owner.service';
 
 @Injectable()
 export class TruckService extends GenericCrudService<Truck, TruckDTO>
   implements PageableService<TruckDTO> {
-  constructor(@InjectRepository(Truck) r: TruckRepository) {
+
+  private readonly ownerService: OwnerService;
+
+  constructor(@InjectRepository(Truck) r: TruckRepository, ownerService: OwnerService) {
     super(r);
+    this.ownerService = ownerService;
+  }
+
+  async create(entity: TruckDTO): Promise<TruckDTO> {
+    return this.save(entity);
+  }
+
+  async update(entity: TruckDTO): Promise<TruckDTO> {
+    return this.save(entity);
+  }
+
+  async save(entity: TruckDTO): Promise<TruckDTO> {
+    let truck: Truck;
+    truck = this.mapToEntity(entity);
+    truck.owner = await this.ownerService.create(truck.owner);
+
+    return this.repository
+      .save(truck)
+      .then(value => this.mapToDTO(value))
+      .catch(e => {
+        throw new HttpException(
+          e.message,
+          HttpStatus.CONFLICT,
+        );
+      });
   }
 
   async findOne(id: number): Promise<TruckDTO> {
