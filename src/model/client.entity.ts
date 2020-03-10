@@ -60,11 +60,11 @@ export class Client extends AbstractEntity {
     @JoinTable({
         name: "client_materials_material",
         joinColumn : {
-            name : "material_id",
+            name : "client_id",
             referencedColumnName: "id"
         },
         inverseJoinColumn : {
-            name : "client_id",
+            name : "material_id",
             referencedColumnName: "id"
         }
     })
