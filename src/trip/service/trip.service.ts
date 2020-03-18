@@ -8,6 +8,7 @@ import {TripRepository} from "../repository/trip.repository";
 import {Pageable} from "../../core/domain/pageable";
 import {PaginatedPage} from "../../core/domain/paginatedPage";
 import {UserService} from "../../administration/service/user.service";
+import {TripMapper} from "../../mapper/trip/trip.mapper";
 
 @Injectable()
 export class TripService extends GenericCrudService<Trip, TripDTO>
@@ -15,12 +16,15 @@ export class TripService extends GenericCrudService<Trip, TripDTO>
 
     private readonly tripRepository: TripRepository;
     private readonly userService: UserService;
+    private readonly tripMapper: TripMapper;
 
     constructor(@InjectRepository(Trip) r: TripRepository,
-                userService: UserService) {
+                userService: UserService,
+                tripMapper: TripMapper) {
         super(r);
         this.tripRepository = r;
         this.userService = userService;
+        this.tripMapper = tripMapper;
     }
 
     async createTrips(dto: TripDTO, laps: number, username: string): Promise<TripDTO[]> {
@@ -43,10 +47,8 @@ export class TripService extends GenericCrudService<Trip, TripDTO>
         return undefined;
     }
 
-    // Todo: implementar mapeo
     mapToDTO(entity: Trip): TripDTO {
-        //Ver como usar los mapeos del servicio de proveedor, material, user, etc...
-        return new TripDTO({id: entity.id});
+        return this.tripMapper.toDTO(entity);
     }
 
     mapToEntity(dto: TripDTO): Trip {

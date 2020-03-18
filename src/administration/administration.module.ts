@@ -7,13 +7,15 @@ import {UserController} from "./controller/user.controller";
 import {RoleService} from "./service/role.service";
 import {RoleController} from "./controller/role.controller";
 import {RoleRepository} from "./repository/role.repository";
+import {UserMapper} from "../mapper/administration/user.mapper";
+import {RoleMapper} from "../mapper/administration/role.mapper";
 
 @Module({
     imports: [
         TypeOrmModule.forRoot(TypeORMConfig),
         TypeOrmModule.forFeature([UserRepository, RoleRepository])
     ],
-    providers: [UserService, RoleService],
+    providers: [UserService, RoleService, UserMapper, RoleMapper],
     exports: [UserService],
     controllers: [UserController, RoleController]
 })

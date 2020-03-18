@@ -11,20 +11,25 @@ import {PhoneType} from "../../model/phone-type";
 import {DeleteResult, Like, SelectQueryBuilder} from "typeorm";
 import {ClientRepository} from "../../client/repository/client.repository";
 import {MaterialService} from "./material.service";
+import {ProviderMapper} from "../../mapper/provider.mapper";
 
 @Injectable()
 export class ProviderService extends GenericCrudService<Client, ProviderDTO> implements PageableService<ProviderDTO> {
 
     private readonly addressService: AddressService;
     private readonly materialService: MaterialService;
+    private readonly providerMapper: ProviderMapper;
 
     constructor(@InjectRepository(Client) private readonly  r: ClientRepository,
                 materialService: MaterialService,
-                addressService: AddressService
+                addressService: AddressService,
+                providerMapper: ProviderMapper
+
     ) {
         super(r);
         this.addressService = addressService;
         this.materialService = materialService;
+        this.providerMapper = providerMapper;
     }
 
 
@@ -102,14 +107,11 @@ export class ProviderService extends GenericCrudService<Client, ProviderDTO> imp
     }
 
     mapToDTO(entity: Client): ProviderDTO {
-        const {hasMaterials, onlyProvider, phoneType, stateAcount, ...dtoData} = entity;
-        const dto = new ProviderDTO(dtoData);
-        dto.phoneType = PhoneType[entity.phoneType];
-        return dto;
+        return this.providerMapper.toDTO(entity);
     }
 
     mapToEntity(dto: ProviderDTO): Client {
-        return new ProviderDTO(dto).mapToEntity();
+        return this.providerMapper.toEntity(dto);
     }
 
     findProvidersByCUIL(cuil: string):

@@ -8,21 +8,27 @@ import {PageableService} from "../../core/pageable-service";
 import {Pageable} from "../../core/domain/pageable";
 import {PaginatedPage} from "../../core/domain/paginatedPage";
 import {SelectQueryBuilder} from "typeorm";
+import {RoleMapper} from "../../mapper/administration/role.mapper";
 
 
 @Injectable()
 export class RoleService extends GenericCrudService<Role, RoleDto> implements PageableService<RoleDto> {
 
-    constructor(@InjectRepository(Role) repository: RoleRepository) {
+    private readonly mapper: RoleMapper;
+
+    constructor(
+        mapper: RoleMapper,
+        @InjectRepository(Role) repository: RoleRepository) {
         super(repository);
+        this.mapper = mapper;
     }
 
     mapToDTO(entity: Role): RoleDto {
-        return new RoleDto(entity);
+        return this.mapper.toDTO(entity);
     }
 
     mapToEntity(dto: RoleDto): Role {
-        return new RoleDto(dto).mapToEntity();
+        return this.mapper.toEntity(dto);
     }
 
     getPage(pageable: Pageable): Promise<PaginatedPage<RoleDto>> {
@@ -32,7 +38,7 @@ export class RoleService extends GenericCrudService<Role, RoleDto> implements Pa
 
         if (pageable.hasFilters()) {
             if (pageable.filters.get("name"))
-                query.where("role.name like :name", {name: "%"+pageable.filters.get("name")+"%"})
+                query.where("role.name like :name", {name: "%" + pageable.filters.get("name") + "%"})
         }
         query.skip(pageable.page * pageable.size);
         query.take(pageable.size);

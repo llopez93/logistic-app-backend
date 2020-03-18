@@ -29,6 +29,8 @@ export abstract class GenericCrudService<T, DTO extends AbstractDto> {
         return this.repository.delete(id);
     }
 
+    //Todo: Evaluar si estos metodos se pueden resolver mediante los mappers
+
     abstract mapToDTO(entity: T): DTO;
 
     abstract mapToEntity(dto: DTO): T;
