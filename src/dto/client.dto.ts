@@ -12,6 +12,7 @@ export class ClientDTO extends AbstractDto {
     phoneType: string;
     email: string;
     address: AddressDTO;
+    stateAcount: number;
 
     constructor(o: Partial<ClientDTO> | Client | Partial<Client>) {
         super();

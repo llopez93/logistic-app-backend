@@ -37,7 +37,7 @@ export class UserController extends GenericController<User, UserDTO> {
     @Post('change-password')
     @ApiOperation({title: "Modifica la contraseña del usuario que esta logeado"})
     @ApiBearerAuth()
-    changePasswotd(@Req() request: Request, @Body() passwords: { actualPassword: string, newPassword: string }): Promise<any> {
+    changePassword(@Req() request: Request, @Body() passwords: { actualPassword: string, newPassword: string }): Promise<any> {
         let sessionInfo: any = request.user;
         return this.userService.changePassword(passwords.actualPassword, passwords.newPassword, sessionInfo.email);
     }

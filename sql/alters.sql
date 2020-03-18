@@ -2333,3 +2333,74 @@ ALTER TABLE `client` ADD `address_id` BIGINT NOT NULL AFTER `email`;
 ALTER TABLE `client` CHANGE `address_id` `address_id` BIGINT(20) NULL;
 
 ALTER TABLE `client` ADD CONSTRAINT `client_address_fk` FOREIGN KEY (`address_id`) REFERENCES `address`(`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+-- 13/03/2020 --
+
+ALTER TABLE material ADD UNIQUE `name_unique` (`name`);
+
+-- 17/03/2020 --
+
+
+--
+-- Estructura de tabla para la tabla `trip`
+--
+
+CREATE TABLE `trip` (
+                        `id` bigint(20) NOT NULL,
+                        `client_id` bigint(20) NOT NULL,
+                        `truck_id` bigint(20) NOT NULL,
+                        `trip_date` datetime NOT NULL,
+                        `origin_id` bigint(20) DEFAULT NULL,
+                        `origin_name` varchar(300) DEFAULT NULL,
+                        `destination` varchar(300) NOT NULL,
+                        `material_id` bigint(20) NOT NULL,
+                        `load_size` int(11) NOT NULL,
+                        `load_cost` tinyint(1) NOT NULL,
+                        `fuel` int(11) NOT NULL,
+                        `price` bigint(20) NOT NULL,
+                        `create_time` datetime NOT NULL,
+                        `user_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `trip`
+--
+ALTER TABLE `trip`
+    ADD PRIMARY KEY (`id`),
+    ADD KEY `client_trip_fk` (`client_id`),
+    ADD KEY `truck_trip_fk` (`truck_id`),
+    ADD KEY `provider_trip_fk` (`origin_id`),
+    ADD KEY `material_trip_fk` (`material_id`),
+    ADD KEY `user_trip_fk` (`user_id`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `trip`
+--
+ALTER TABLE `trip`
+    MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `trip`
+--
+ALTER TABLE `trip`
+    ADD CONSTRAINT `client_trip_fk` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`),
+    ADD CONSTRAINT `material_trip_fk` FOREIGN KEY (`material_id`) REFERENCES `material` (`id`),
+    ADD CONSTRAINT `provider_trip_fk` FOREIGN KEY (`origin_id`) REFERENCES `client` (`id`),
+    ADD CONSTRAINT `truck_trip_fk` FOREIGN KEY (`truck_id`) REFERENCES `truck` (`id`),
+    ADD CONSTRAINT `user_trip_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+COMMIT;
+
+ALTER TABLE `client` ADD `acount_state` BIGINT NOT NULL AFTER `has_materials`;

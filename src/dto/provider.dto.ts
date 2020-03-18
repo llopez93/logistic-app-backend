@@ -13,7 +13,7 @@ export class ProviderDTO extends AbstractDto {
     phoneType: string;
     email: string;
     address: AddressDTO;
-    materials: MaterialDTO[];
+    materials: MaterialDTO[] = [];
 
 
     constructor(o: Partial<ProviderDTO> | Client | Partial<Client>) {

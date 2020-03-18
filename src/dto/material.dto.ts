@@ -1,6 +1,6 @@
 import {AbstractDto} from "../core/domain/abstract.dto";
 import {Material} from "../model/trip/material.entity";
-import {findMaterialUnitByValue} from "../model/trip/material-unit";
+import {findMaterialUnitByValue, MaterialUnit} from "../model/trip/material-unit";
 
 export class MaterialDTO extends AbstractDto {
 
@@ -10,6 +10,8 @@ export class MaterialDTO extends AbstractDto {
     constructor(o: Partial<MaterialDTO> | Material) {
         super();
         Object.assign(this, o);
+        if (o.unit && o instanceof Material)
+            this.unit = MaterialUnit[this.unit];
     }
 
     mapToEntity(): Material {

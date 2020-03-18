@@ -59,16 +59,23 @@ export class Client extends AbstractEntity {
     @ManyToMany(type => Material)
     @JoinTable({
         name: "client_materials_material",
-        joinColumn : {
-            name : "client_id",
+        joinColumn: {
+            name: "client_id",
             referencedColumnName: "id"
         },
-        inverseJoinColumn : {
-            name : "material_id",
+        inverseJoinColumn: {
+            name: "material_id",
             referencedColumnName: "id"
         }
     })
     materials: Material[];
+
+    @Column(
+        {
+            name: "acount_state",
+            type: "bigint"
+        })
+    stateAcount: number = 0;
 
     constructor(o: Partial<Client>) {
         super();

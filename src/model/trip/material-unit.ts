@@ -1,6 +1,6 @@
 export enum MaterialUnit {
     KILO = "Kg",
-    CUBIC_METER = "m3",
+    CUBIC_METER = "M3",
 }
 
 export function findMaterialUnitByValue(value: String): MaterialUnit {

@@ -81,6 +81,15 @@ export class ClientService extends GenericCrudService<Client, ClientDTO> impleme
         });
     }
 
+
+    async findAll(): Promise<ClientDTO[]> {
+        return this.repository.find( {
+            where : {
+                onlyProvider : false
+            }
+        }).then( result => result.map( c => this.mapToDTO(c)));
+    }
+
     mapToDTO(entity: Client): ClientDTO {
         const {hasMaterials, onlyProvider, ...data} = entity;
         const dto = new ClientDTO(data);
