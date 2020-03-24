@@ -145,6 +145,31 @@ ALTER TABLE `client`
 ---- 04/03/2020  ----
 
 --
+-- Estructura de tabla para la tabla `owner`
+--
+
+CREATE TABLE `owner` (
+	`id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+	`first_name` VARCHAR(100) NOT NULL,
+	`last_name` VARCHAR(100) NOT NULL,
+	`email` VARCHAR(150) NULL DEFAULT NULL,
+	`cuil` VARCHAR(50) NULL DEFAULT NULL,
+  `shovel_cost` DECIMAL(10,2) NULL DEFAULT 0.00,
+	PRIMARY KEY (`id`),
+	UNIQUE INDEX `email` (`email`)
+)
+COLLATE='utf8mb4_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=11
+;
+
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (1, 'nombre1', 'apellido1', 'nombre1@apellido1.com', '12312312312', 0.00);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (2, 'perez', 'perez', 'jose@jose.com', '09876543210', 0.00);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (3, 'joselito', 'papo', 'jpapo@gimail.com', '20123456789', 12000);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (4, 'prueba20', 'prueba2', 'prueba2@prueba2', '10210210210', 10000);
+
+
+--
 -- Estructura de tabla para la tabla `province`
 --
 
@@ -205,7 +230,7 @@ ALTER TABLE `province`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 
-  --
+--
 -- Estructura de tabla para la tabla `city`
 --
 
