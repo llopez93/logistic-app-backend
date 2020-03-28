@@ -6,6 +6,7 @@ export class OwnerDTO extends AbstractDto {
   lastName: string;
   email: string;
   cuil: string;
+  shovelCost: number = 0;
 
   constructor(o: Partial<OwnerDTO> | Owner | Partial<Owner>) {
     super();

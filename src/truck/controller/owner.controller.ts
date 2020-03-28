@@ -4,32 +4,23 @@ import { OwnerService } from '../service/owner.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiOperation } from '@nestjs/swagger';
 import { OwnerDTO } from 'src/dto/truck/owner.dto';
+import { GenericController } from 'src/core/generic-controller';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('owners')
 @ApiUseTags('owners')
-export class OwnerController {
-  constructor(private readonly service: OwnerService) {}
+export class OwnerController extends GenericController<Owner, OwnerDTO> {
+  
+  private readonly ownerService: OwnerService;
 
-  @Get()
-  @ApiOperation({ title: 'Listado de peopietarios' })
-  findAll(): Promise<Owner[]> {
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  @ApiOperation({ title: 'Encontrar propietario por ID' })
-  async find(@Param('id') id: number): Promise<OwnerDTO> {
-    const owner = await this.service.findOne(id);
-    if (owner == undefined) {
-      throw new NotFoundException();
-    }
-    return owner;
+  constructor(service: OwnerService) {
+    super(service, service);
+    this.ownerService = service;
   }
 
   @Get('/by-cuil/:cuil')
   @ApiOperation({ title: 'Recuperar propietarios por número de cuil/cuit' })
   async getByCuil(@Param('cuil') cuil: string): Promise<OwnerDTO[]> {
-    return this.service.findOwnersByCUIL(cuil);
+    return this.ownerService.findOwnersByCUIL(cuil);
   }
 }

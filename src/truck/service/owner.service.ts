@@ -1,47 +1,82 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Owner} from '../../model/truck/owner.entity';
-import {OwnerRepository} from '../repository/owner.repository';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Owner } from '../../model/truck/owner.entity';
+import { OwnerRepository } from '../repository/owner.repository';
 
-import {Like} from 'typeorm';
-import {OwnerDTO} from "../../dto/truck/owner.dto";
+import { Like, SelectQueryBuilder } from 'typeorm';
+import { OwnerDTO } from '../../dto/truck/owner.dto';
+import { GenericCrudService } from 'src/core/generic-crud-service';
+import { PageableService } from 'src/core/pageable-service';
+import { Pageable } from 'src/core/domain/pageable';
+import { PaginatedPage } from 'src/core/domain/paginatedPage';
 
 @Injectable()
-export class OwnerService {
-    constructor(
-        @InjectRepository(Owner) private readonly repository: OwnerRepository,
-    ) {
-    }
+export class OwnerService extends GenericCrudService<Owner, OwnerDTO>
+  implements PageableService<OwnerDTO> {
+  constructor(@InjectRepository(Owner) repository: OwnerRepository) {
+    super(repository);
+  }
 
-    public findAll(): Promise<Owner[]> {
-        return this.repository.find();
-    }
+  findOwnersByCUIL(cuil: string): Promise<OwnerDTO[]> {
+    return this.repository
+      .find({
+        where: {
+          cuil: Like('%' + cuil + '%'),
+        },
+        take: 10,
+        skip: 0,
+      })
+      .then(result => result.map(owner => this.mapToDTO(owner)));
+  }
 
-    create(entity: Owner): Promise<Owner> {
-        return this.repository.save(entity);
-    }
+  mapToDTO(entity: Owner): OwnerDTO {
+    return new OwnerDTO(entity);
+  }
 
-    findOne(id: number): Promise<OwnerDTO> {
-        return this.repository.findOne(id).then(owner => this.mapToDTO(owner));
-    }
+  mapToEntity(dto: OwnerDTO): Owner {
+    return new OwnerDTO(dto).mapToEntity();
+  }
 
-    findOwnersByCUIL(cuil: string): Promise<OwnerDTO[]> {
-        return this.repository
-            .find({
-                where: {
-                    cuil: Like('%' + cuil + '%'),
-                },
-                take: 10,
-                skip: 0,
-            })
-            .then(result => result.map(owner => this.mapToDTO(owner)));
-    }
+  getPage(pageable: Pageable): Promise<PaginatedPage<OwnerDTO>> {
+    const page: PaginatedPage<OwnerDTO> = new PaginatedPage<OwnerDTO>();
+    const query: SelectQueryBuilder<Owner> = this.repository.createQueryBuilder(
+      'owner',
+    );
+    query.select('owner');
 
-    mapToDTO(entity: Owner): OwnerDTO {
-        return new OwnerDTO(entity);
-    }
+    if (pageable.hasFilters()) {
+      if (pageable.filters.get('firstName'))
+        query.where('owner.firstName like :firstName', {
+          firstName: '%' + pageable.filters.get('firstName') + '%',
+        });
+      
+      if (pageable.filters.get('lastName'))
+        query.where('owner.lastName like :lastName', {
+          lastName: '%' + pageable.filters.get('lastName') + '%',
+        });
 
-    mapToEntity(dto: OwnerDTO): Owner {
-        return new OwnerDTO(dto).mapToEntity();
+      if (pageable.filters.get('email'))
+        query.andWhere('owner.email like :email', {
+          email: '%' + pageable.filters.get('email') + '%',
+        });
+
+      if (pageable.filters.get('cuil'))
+        query.andWhere('owner.cuil like :cuil', {
+          cuil: '%' + pageable.filters.get('cuil') + '%',
+        });
     }
+    query.skip(pageable.page * pageable.size);
+    query.take(pageable.size);
+    return query
+      .getMany()
+      .then(owners => {
+        page.data = owners.map(t => this.mapToDTO(t));
+        return query.getCount();
+      })
+      .then(count => {
+        page.total = count;
+        page.page = pageable.page;
+        return page;
+      });
+  }
 }

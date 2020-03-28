@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { AbstractEntity } from '../commons/abstract.entity';
+import { Truck } from './truck.entity';
 
 @Entity('owner')
 export class Owner extends AbstractEntity {
@@ -27,6 +28,13 @@ export class Owner extends AbstractEntity {
   @ApiModelProperty()
   @Column({ name: 'cuil' })
   cuil: string = '';
+
+  @ApiModelProperty()
+  @Column({
+    name: 'shovel_cost',
+    type: 'decimal',
+  })
+  shovelCost: number = 0;
 
   constructor(o: Partial<Owner>) {
     super();
