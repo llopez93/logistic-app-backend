@@ -2,7 +2,6 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 import { AbstractEntity } from '../commons/abstract.entity';
-import { Truck } from './truck.entity';
 
 @Entity('owner')
 export class Owner extends AbstractEntity {

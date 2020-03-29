@@ -21,30 +21,6 @@ export class TruckService extends GenericCrudService<Truck, TruckDTO>
     this.ownerService = ownerService;
   }
 
-  async create(entity: TruckDTO): Promise<TruckDTO> {
-    return this.save(entity);
-  }
-
-  async update(entity: TruckDTO): Promise<TruckDTO> {
-    return this.save(entity);
-  }
-
-  async save(entity: TruckDTO): Promise<TruckDTO> {
-    let truck: Truck;
-    truck = this.mapToEntity(entity);
-    truck.owner = await this.ownerService.create(truck.owner);
-
-    return this.repository
-      .save(truck)
-      .then(value => this.mapToDTO(value))
-      .catch(e => {
-        throw new HttpException(
-          e.message,
-          HttpStatus.CONFLICT,
-        );
-      });
-  }
-
   async findOne(id: number): Promise<TruckDTO> {
     return this.repository
       .findOne({ id: id }, { relations: ['model', 'model.brand', 'owner'] })

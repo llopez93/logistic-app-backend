@@ -49,7 +49,7 @@ export class OwnerService extends GenericCrudService<Owner, OwnerDTO>
         query.where('owner.firstName like :firstName', {
           firstName: '%' + pageable.filters.get('firstName') + '%',
         });
-      
+
       if (pageable.filters.get('lastName'))
         query.where('owner.lastName like :lastName', {
           lastName: '%' + pageable.filters.get('lastName') + '%',
