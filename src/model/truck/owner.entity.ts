@@ -35,6 +35,13 @@ export class Owner extends AbstractEntity {
   })
   shovelCost: number = 0;
 
+  @ApiModelProperty()
+  @Column({
+    name: 'trip_cost',
+    type: 'decimal',
+  })
+  tripCost: number = 0;
+
   constructor(o: Partial<Owner>) {
     super();
     Object.assign(this, o);

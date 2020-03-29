@@ -155,6 +155,7 @@ CREATE TABLE `owner` (
 	`email` VARCHAR(150) NULL DEFAULT NULL,
 	`cuil` VARCHAR(50) NULL DEFAULT NULL,
   `shovel_cost` DECIMAL(10,2) NULL DEFAULT 0.00,
+  `trip_cost` DECIMAL(10,2) NULL DEFAULT 0.00,
 	PRIMARY KEY (`id`),
 	UNIQUE INDEX `email` (`email`)
 )
@@ -163,10 +164,10 @@ ENGINE=InnoDB
 AUTO_INCREMENT=11
 ;
 
-INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (1, 'nombre1', 'apellido1', 'nombre1@apellido1.com', '12312312312', 0.00);
-INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (2, 'perez', 'perez', 'jose@jose.com', '09876543210', 0.00);
-INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (3, 'joselito', 'papo', 'jpapo@gimail.com', '20123456789', 12000);
-INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`) VALUES (4, 'prueba20', 'prueba2', 'prueba2@prueba2', '10210210210', 10000);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`, `trip_cost`) VALUES (1, 'nombre1', 'apellido1', 'nombre1@apellido1.com', '12312312312', 0.00, 5000);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`, `trip_cost`) VALUES (2, 'perez', 'perez', 'jose@jose.com', '09876543210', 0.00, 4590);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`, `trip_cost`) VALUES (3, 'joselito', 'papo', 'jpapo@gimail.com', '20123456789', 12000, 3240);
+INSERT INTO `owner` (`id`, `first_name`, `last_name`, `email`, `cuil`, `shovel_cost`, `trip_cost`) VALUES (4, 'prueba20', 'prueba2', 'prueba2@prueba2', '10210210210', 10000, 4210);
 
 
 --
