@@ -7,7 +7,7 @@ export class TripRepository extends GenericRepository<Trip> {
 
     async findLastTrips(limit: number): Promise<Trip[]> {
         return this.find({
-            relations: ["client", "origin", "material", "createdBy"],
+            relations: ["client", "truck", "origin", "material", "createdBy"],
             skip: 0,
             take: 10,
             order: {id: "DESC"}});

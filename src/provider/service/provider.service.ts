@@ -5,69 +5,104 @@ import {PageableService} from "../../core/pageable-service";
 import {AddressService} from "../../address/service/address.service";
 import {InjectRepository} from "@nestjs/typeorm";
 import {ProviderDTO} from "../../dto/provider.dto";
-import {PaginatedPage} from "../../core/domain/paginatedPage";
-import {Pageable} from "../../core/domain/pageable";
-import {PhoneType} from "../../model/phone-type";
-import {DeleteResult, Like, SelectQueryBuilder} from "typeorm";
 import {ClientRepository} from "../../client/repository/client.repository";
 import {MaterialService} from "./material.service";
 import {ProviderMapper} from "../../mapper/provider.mapper";
+import {MaterialPriceService} from "./material-price.service";
+import {Pageable} from "../../core/domain/pageable";
+import {PaginatedPage} from "../../core/domain/paginatedPage";
+import {DeleteResult, Like, SelectQueryBuilder} from "typeorm";
+import {MaterialPriceMapper} from "../../mapper/material-price.mapper";
 
 @Injectable()
 export class ProviderService extends GenericCrudService<Client, ProviderDTO> implements PageableService<ProviderDTO> {
 
     private readonly addressService: AddressService;
     private readonly materialService: MaterialService;
+    private readonly materialPriceService: MaterialPriceService;
     private readonly providerMapper: ProviderMapper;
+    private readonly materialPriceMapper: MaterialPriceMapper;
 
     constructor(@InjectRepository(Client) private readonly  r: ClientRepository,
                 materialService: MaterialService,
                 addressService: AddressService,
-                providerMapper: ProviderMapper
-
+                materialPriceService: MaterialPriceService,
+                providerMapper: ProviderMapper,
+                materialPriceMapper: MaterialPriceMapper
     ) {
         super(r);
         this.addressService = addressService;
         this.materialService = materialService;
+        this.materialPriceService = materialPriceService;
         this.providerMapper = providerMapper;
+        this.materialPriceMapper = materialPriceMapper;
     }
 
 
+    async findAll(): Promise<ProviderDTO[]> {
+        return this.repository.find({
+            where: [{onlyProvider: true}, {hasMaterials: true}]
+        }).then(result => result.map(c => this.mapToDTO(c)));
+    }
+
     async findOne(id: number): Promise<ProviderDTO> {
-        return this.repository.findOne({
+        let dto = await this.repository.findOne({
             where: {id: id},
-            relations: ["address", "materials", "address.city", "address.city.province"]
+            relations: ["address", "address.city", "address.city.province"]
         }).then(p => this.mapToDTO(p));
+        dto.materials = await this.materialPriceService.findByProvider(id).then(res => res.map(m => this.materialPriceMapper.toDTO(m)));
+        return dto;
     }
 
     async create(entity: ProviderDTO): Promise<ProviderDTO> {
-        const provider = this.mapToEntity(entity);
-        let newMaterials = provider.materials.filter(m => m.id === null);
-        provider.materials = provider.materials.filter(m => m.id !== null);
-        newMaterials = await this.materialService.create(newMaterials);
-        newMaterials.forEach(newMaterial => provider.materials.push(newMaterial));
+        let provider = this.mapToEntity(entity);
+        let materials = entity.materials.map(m => this.materialPriceMapper.toEntity(m));
+
         provider.onlyProvider = true;
+        provider.hasMaterials = materials.length > 0;
         provider.address = await this.addressService.create(entity.address).then(a => a.mapToEntity());
-        return this.repository.save(provider).then(p => this.mapToDTO(p));
+        provider = await this.repository.save(provider);
+        materials.forEach(m => m.provider = provider);
+        let materialsDTOs = await this.materialPriceService.create(materials).then(res => res.map(m => this.materialPriceMapper.toDTO(m)));
+
+        const providerDTO = this.mapToDTO(provider);
+        providerDTO.materials = materialsDTOs;
+
+        return providerDTO;
     }
 
     async update(entity: ProviderDTO): Promise<ProviderDTO> {
-        //TODO: Revisar porque siempre lo almacena como onlyProvider
         //TODO: Recuperar el estado de cuenta previamente
-        const e: Client = this.mapToEntity(entity);
+        let e: Client = this.mapToEntity(entity);
+        let savedMaterials = await this.materialPriceService.findByProvider(e.id);
+        let materials = entity.materials.map(m => this.materialPriceMapper.toEntity(m));
+        let deletedMaterials = savedMaterials.filter(m => !materials.some(savedMaterial => savedMaterial.id === m.id));
+        if (deletedMaterials.length > 0)
+            await this.materialPriceService.removeMaterials(deletedMaterials);
+
+        e.hasMaterials = materials.length > 0;
+
+        //TODO: Revisar porque siempre lo almacena como onlyProvider
         e.onlyProvider = await (this.repository as ClientRepository).isOnlyProvider(entity.id);
-        return this.repository.save(e).then(p => this.mapToDTO(p));
+        e = await this.repository.save(e);
+
+        materials.forEach(m => m.provider = e);
+        let materialsDTOs = await this.materialPriceService.create(materials).then(res => res.map(m => this.materialPriceMapper.toDTO(m)));
+
+        const providerDTO = this.mapToDTO(e);
+        providerDTO.materials = materialsDTOs;
+
+        return providerDTO;
     }
 
 
     async remove(id: number): Promise<DeleteResult> {
         const p: Client = await this.repository.findOne({
             where: {id: id},
-            relations: ["address", "materials"]
+            relations: ["address"]
         });
-        p.materials = [];
         const addressID = p.address.id;
-        return this.repository.save(p)
+        return this.materialPriceService.removeByProvider(id)
             .then(() => super.remove(id))
             .then(value => this.addressService.remove(p.address.id));
     }

@@ -1,10 +1,9 @@
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne} from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import {IsNotEmpty} from 'class-validator';
 import {ApiModelProperty} from '@nestjs/swagger';
 import {AbstractEntity} from "./commons/abstract.entity";
 import {PhoneType} from "./phone-type";
 import {Address} from "./address/address.entity";
-import {Material} from "./trip/material.entity";
 
 @Entity('client')
 export class Client extends AbstractEntity {
@@ -56,8 +55,9 @@ export class Client extends AbstractEntity {
     @Column({name: 'has_materials'})
     hasMaterials: boolean = false;
 
-    @ManyToMany(type => Material)
-    @JoinTable({
+    /**
+     @ManyToMany(type => Material)
+     @JoinTable({
         name: "client_materials_material",
         joinColumn: {
             name: "client_id",
@@ -68,7 +68,7 @@ export class Client extends AbstractEntity {
             referencedColumnName: "id"
         }
     })
-    materials: Material[];
+     */
 
     @Column(
         {

@@ -19,6 +19,8 @@ export class TripDTO extends AbstractDto {
     loadCost: number;
     fuel: number;
     price: number;
+    shipmentPrice: number;
+    shovelPrice: number;
     createTime: number;
     createdBy: UserDTO;
 

@@ -27,7 +27,7 @@ export class Trip extends AbstractEntity {
 
     @ApiModelProperty()
     @ManyToOne(type => Client,
-        { nullable: true})
+        {nullable: true})
     @JoinColumn({name: "origin_id"})
     origin: Client = null;
 
@@ -41,7 +41,7 @@ export class Trip extends AbstractEntity {
 
     @ApiModelProperty()
     @ManyToOne(type => Material,
-        { nullable: false})
+        {nullable: false})
     @JoinColumn({name: "material_id"})
     material: Material;
 
@@ -52,6 +52,22 @@ export class Trip extends AbstractEntity {
             type: "int"
         })
     loadSize: number = 0;
+
+    @ApiModelProperty()
+    @Column(
+        {
+            name: "shipment_price",
+            type: "int"
+        })
+    shipmentPrice: number = 0;
+
+    @ApiModelProperty()
+    @Column(
+        {
+            name: "shovel_price",
+            type: "int"
+        })
+    shovelPrice: number = 0;
 
     @ApiModelProperty()
     @Column(

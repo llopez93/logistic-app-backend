@@ -3,8 +3,8 @@ import { Owner } from '../../model/truck/owner.entity';
 import { OwnerService } from '../service/owner.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiUseTags, ApiOperation } from '@nestjs/swagger';
-import { OwnerDTO } from 'src/dto/truck/owner.dto';
-import { GenericController } from 'src/core/generic-controller';
+import {OwnerDTO} from "../../dto/truck/owner.dto";
+import {GenericController} from "../../core/generic-controller";
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('owners')

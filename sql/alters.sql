@@ -132,9 +132,6 @@ create table material
         unique (name)
 );
 
--- 17/03/2020 --
-
-
 --
 -- Estructura de tabla para la tabla `trip`
 --
@@ -197,3 +194,11 @@ ALTER TABLE `trip`
 COMMIT;
 
 ALTER TABLE `client` ADD `acount_state` BIGINT NOT NULL AFTER has_materials;
+
+
+-- 5/04/2020 --
+
+alter table trip
+    add shipment_price int null;
+alter table trip
+    add shovel_price int null;

@@ -23,7 +23,7 @@ export class TripController extends GenericController<Trip, TripDTO> {
     @ApiOperation({
         title: "Crea una nueva entidad",
         description: "Le pasamos un JSON con los datos de la entidad, sin el id." +
-            " La API nos devuelve el objeto creado con su ID asignado"
+            "El API nos devuelve el objeto creado con su ID asignado"
     })
     @ApiOkResponse({description: "Entidad creada"})
     createTrips(@Req() request: Request, @Body() body: { data: TripDTO, laps: number }): Promise<TripDTO[]> {
